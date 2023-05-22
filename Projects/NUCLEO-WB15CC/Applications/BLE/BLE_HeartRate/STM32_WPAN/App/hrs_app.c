@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -185,7 +185,13 @@ static void HRSAPP_Measurement(void)
 /* USER CODE BEGIN HRSAPP_Measurement */
   uint32_t measurement;
 
-  measurement = ((HRSAPP_Read_RTC_SSR_SS()) & 0x07) + 65;
+//  measurement = ((HRSAPP_Read_RTC_SSR_SS()) & 0x07) + 65;
+  HAL_ADC_MspInit(&hadc1);
+  HAL_ADC_Start(&hadc1);
+  HAL_ADC_PollForConversion(&hadc1, 10);
+  measurement = HAL_ADC_GetValue(&hadc1);
+  HAL_ADC_Stop(&hadc1);
+  HAL_ADC_MspDeInit(&hadc1);
 
   HRSAPP_Context.MeasurementvalueChar.MeasurementValue = measurement;
 #if (BLE_CFG_HRS_ENERGY_EXPENDED_INFO_FLAG != 0)
